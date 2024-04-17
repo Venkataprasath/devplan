@@ -14,9 +14,9 @@ function Features() {
   const handleShow = () => setShow(true);
 
   async function addFeature() {
-    const feature_name = document.getElementById('feature_name').value;
-    const jira_id = document.getElementById('jira_id').value;
-    const lld = document.getElementById('lld').checked;
+    const feature_name = (document.getElementById('feature_name')  as HTMLInputElement).value;
+    const jira_id = (document.getElementById('jira_id')  as HTMLInputElement).value;
+    const lld = (document.getElementById('lld') as HTMLInputElement).checked;
     const { data, error } = await supabase
       .from('features')
       .insert([

@@ -23,7 +23,7 @@ function SprintList() {
   }
 
   return (
-    <table striped bordered hover>
+    <table>
       <thead>
         <tr>
           <th>Sprint Number</th>

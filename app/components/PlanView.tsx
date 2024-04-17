@@ -23,12 +23,6 @@ export default function PlanView(props) {
     console.log(teamMembers);
   }
 
-  async function getFeatures() {
-    const { data } = await supabase.from("features").select().eq('team_id', props.team_id);
-    setFeatures(data);
-    console.log(features);
-  }
-
   async function getSprintTasks() {
     const { data } = await supabase.from("sprint_tasks").select().eq('sprint_id', props.sprint_id);
     setSprintTasks(data);
@@ -64,7 +58,7 @@ export default function PlanView(props) {
     });
   }
 
-  function isWeekend(date: never): never {
+  function isWeekend(date: Date): boolean {
     return date.getDay() === 0 || date.getDay() === 6;
   }
 

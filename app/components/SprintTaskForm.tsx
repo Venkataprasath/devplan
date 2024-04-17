@@ -40,21 +40,21 @@ function SprintTaskForm(props){
     console.log("Feature added");
     Array.from(document.getElementsByClassName('sprint_task_rows')).forEach((row) => {
     const sprint_task = {
-      feature_id: row.querySelector('select[name="feature"]').value,
-      milestone: row.querySelector('select[name="milestone"]').value,
-      be_efforts: row.querySelector('input[name="be_efforts"]').value,
-      fe_efforts: row.querySelector('input[name="fe_efforts"]').value,
-      qa_efforts: row.querySelector('input[name="qa_efforts"]').value,
-      dev_user_id: row.querySelector('select[name="dev_user"]').value,
-      qa_user_id: row.querySelector('select[name="qa_user"]').value,
-      qa_drop_date: row.querySelector('input[name="qa_drop_date"]').value,
-      dev_start_date: row.querySelector('input[name="dev_start_date"]').value,
-      qa_start_date: row.querySelector('input[name="qa_start_date"]').value,
-      fe_user_id: row.querySelector('select[name="fe_user"]').value,
-      fe_start_date: row.querySelector('input[name="fe_start_date"]').value,
+      feature_id: (row.querySelector('select[name="feature"]')as HTMLInputElement).value,
+      milestone: (row.querySelector('select[name="milestone"]')as HTMLInputElement).value,
+      be_efforts: (row.querySelector('input[name="be_efforts"]')as HTMLInputElement).value,
+      fe_efforts: (row.querySelector('input[name="fe_efforts"]')as HTMLInputElement).value,
+      qa_efforts: (row.querySelector('input[name="qa_efforts"]')as HTMLInputElement).value,
+      dev_user_id: (row.querySelector('select[name="dev_user"]')as HTMLInputElement).value,
+      qa_user_id: (row.querySelector('select[name="qa_user"]')as HTMLInputElement).value,
+      qa_drop_date: (row.querySelector('input[name="qa_drop_date"]')as HTMLInputElement).value,
+      dev_start_date: (row.querySelector('input[name="dev_start_date"]')as HTMLInputElement).value,
+      qa_start_date: (row.querySelector('input[name="qa_start_date"]')as HTMLInputElement).value,
+      fe_user_id: (row.querySelector('select[name="fe_user"]')as HTMLInputElement).value,
+      fe_start_date: (row.querySelector('input[name="fe_start_date"]')as HTMLInputElement).value,
       sprint_id: props.sprint_id,
     }
-    const sprint_task_id = row.querySelector('input[name="id"]')?.value;
+    const sprint_task_id = (row.querySelector('input[name="id"]')as HTMLInputElement)?.value;
     removeEmptyValues(sprint_task);
     if(sprint_task_id){
       updateSprintTask(sprint_task_id, sprint_task);
@@ -110,7 +110,7 @@ function SprintTaskForm(props){
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
   integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-  crossorigin="anonymous"
+  crossOrigin="anonymous"
 />
 <br/>
     <div >
@@ -137,7 +137,7 @@ function SprintTaskForm(props){
             </thead>
 
             {[...Array(rows).keys()].map((row) => (
-            <tr className="sprint_task_rows" data-row_id={row.id}>
+            <tr className="sprint_task_rows" data-row_id={row}>
               <td>
                 <FeaturesList feature_id={sprint_tasks[row]?.feature_id}/>
               </td>

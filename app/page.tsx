@@ -35,15 +35,15 @@ export default function Home() {
   function addFeature(){
     console.log("Feature added");
     const feature = {
-      feature: document.querySelector('input[name="feature"]').value,
-      lld: document.querySelector('input[name="lld"]').value,
-      milestone: document.querySelector('input[name="milestone"]').value,
-      be_efforts: document.querySelector('input[name="be_efforts"]').value,
-      fe_efforts: document.querySelector('input[name="fe_efforts"]').value,
-      qa_efforts: document.querySelector('input[name="qa_efforts"]').value,
-      dev_user: document.querySelector('input[name="dev_user"]').value,
-      qa_user: document.querySelector('input[name="qa_user"]').value,
-      qa_drop_date: document.querySelector('input[name="qa_drop_date"]').value,
+      feature: (document.querySelector('input[name="feature"]') as HTMLInputElement).value,
+      lld: (document.querySelector('input[name="lld"]') as HTMLInputElement).value,
+      milestone: (document.querySelector('input[name="milestone"]') as HTMLInputElement).value,
+      be_efforts: (document.querySelector('input[name="be_efforts"]') as HTMLInputElement).value,
+      fe_efforts: (document.querySelector('input[name="fe_efforts"]') as HTMLInputElement).value,
+      qa_efforts: (document.querySelector('input[name="qa_efforts"]') as HTMLInputElement).value,
+      dev_user: (document.querySelector('input[name="dev_user"]') as HTMLInputElement).value,
+      qa_user: (document.querySelector('input[name="qa_user"]') as HTMLInputElement).value,
+      qa_drop_date: (document.querySelector('input[name="qa_drop_date"]') as HTMLInputElement).value,
     }
     setFeatures([...features, feature]);
   }
