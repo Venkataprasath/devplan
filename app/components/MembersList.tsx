@@ -19,7 +19,7 @@ function MembersList(props) {
   }
 
   return (
-    <select name={role_type+'_user'} value={props.user_id}>
+    <select name={role_type+'_user'} value={props.user_id} onChange={(e) => props.onChange(props.row_id, e.target.value, role_type+'_user_id')}>
       {members.map((member) => (
         <option value={member.id}>{member.name}</option>
       ))}

@@ -104,6 +104,12 @@ function SprintTaskForm(props){
     addFeatures()
   }
 
+  function changeHandler(value) {
+    this.setState({
+        value: value
+    });
+}
+
   return (
     <>
     <link
@@ -155,9 +161,9 @@ function SprintTaskForm(props){
               onChange={(e) => handleChange(sprint_tasks[row]?.id, e.target.value, 'fe_efforts')}></input></td>
               <td><input type="text" placeholder="QA effort" name='qa_efforts' value={sprint_tasks[row]?.qa_efforts}
               onChange={(e) => handleChange(sprint_tasks[row]?.id, e.target.value, 'qa_efforts')}></input></td>
-              <td><MembersList role_type={'dev'} user_id={sprint_tasks[row]?.dev_user_id}/></td>
-              <td><MembersList role_type={'qa'} user_id={sprint_tasks[row]?.qa_user_id}/></td>
-              <td><MembersList role_type={'fe'} user_id={sprint_tasks[row]?.fe_user_id}/></td>
+              <td><MembersList role_type={'dev'} user_id={sprint_tasks[row]?.dev_user_id} row_id={sprint_tasks[row]?.id} onChange={handleChange}/></td>
+              <td><MembersList role_type={'qa'} user_id={sprint_tasks[row]?.qa_user_id} row_id={sprint_tasks[row]?.id} onChange={handleChange}/></td>
+              <td><MembersList role_type={'fe'} user_id={sprint_tasks[row]?.fe_user_id} row_id={sprint_tasks[row]?.id} onChange={handleChange}/></td>
                 <td>
                   <input type="date" placeholder="Dev Start date" name='dev_start_date' value={sprint_tasks[row]?.dev_start_date} onChange={
                     (e) => handleChange(sprint_tasks[row]?.id, e.target.value, 'dev_start_date')
