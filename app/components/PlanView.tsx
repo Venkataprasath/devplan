@@ -31,9 +31,13 @@ export default function PlanView(props) {
     setWorkItem();
   }
 
-  function getLeavePlan() {
-    setLeavePlan({
-    });
+  async function getLeavePlan() {
+    const {data} = await supabase.from('leaves').select().eq('sprint_id', props.sprint_id);
+    let plan = {};
+    data.map((leave) => {
+      plan[leave.member_id] = leave.leaves;
+    })
+    setLeavePlan(plan);
   }
 
 
@@ -64,8 +68,6 @@ export default function PlanView(props) {
       sprint_id: props.sprint_id
     },{ onConflict: 'member_id, sprint_id'}).select();
   }
-
-  
 
   function isWeekend(date: Date): boolean {
     return date.getDay() === 0 || date.getDay() === 6;
@@ -150,7 +152,7 @@ export default function PlanView(props) {
       {teamMembers.map((member) => (
         <tr>
           <td>{member.name}</td>
-          <td><input type="text" name={member.id+'_leave_plan'} onChange={changeLeavePlan}/></td>
+          <td><input type="text" name={member.id+'_leave_plan'} onChange={changeLeavePlan} value={leavePlan[member.id]} placeholder="Enter leaves ex: 1,2"/></td>
           {dates.map((date) => (
             <td className={ leavePlan[member.id] && leavePlan[member.id].split(',').includes(date.getDate().toString()) || isWeekend(date) ? 'bg-red no-padding': 'bg-green no-padding'}>
               {
