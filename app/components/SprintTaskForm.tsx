@@ -147,7 +147,7 @@ function SprintTaskForm(props){
               <td>
                 <FeaturesList feature_id={sprint_tasks[row]?.feature_id}/>
               </td>
-              <td><select name="milestone">
+              <td><select name="milestone" value={sprint_tasks[row]?.milestone} onChange={(e) => handleChange(sprint_tasks[row]?.id, e.target.value, 'milestone')}>
                 {milestones.map((milestone) => (
                   <option value={milestone}>{milestone}</option>
                 ))}
