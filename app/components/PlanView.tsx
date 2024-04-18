@@ -2,6 +2,7 @@
 import { get } from "http";
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/initSupabase";
+import { Table } from 'react-bootstrap';
 
 export default function PlanView(props) {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -37,26 +38,34 @@ export default function PlanView(props) {
 
 
 
-  function getDates() {
+  async function getDates() {
     let dates = [];
+    const { data } = await supabase.from("sprints").select().eq('id', props.sprint_id);
     for (let i = 0; i < 14; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() + i);
-      dates.push(date);
+      const temp_date = new Date(data[0].start_date);
+      temp_date.setDate(temp_date.getDate() + i);
+      console.log(temp_date)
+      dates.push(temp_date);
     }
     setDates(dates);
     getSprintTasks();
   }
 
-  function changeLeavePlan(e) {
-    debugger;
+  async function changeLeavePlan(e) {
     let { name, value } = e.target;
     name = name.replaceAll('_leave_plan', '')
     setLeavePlan({
       ...leavePlan,
       [name]: value
     });
+    await supabase.from('leaves').upsert({
+      member_id: name,
+      leaves: value,
+      sprint_id: props.sprint_id
+    },{ onConflict: 'member_id, sprint_id'}).select();
   }
+
+  
 
   function isWeekend(date: Date): boolean {
     return date.getDay() === 0 || date.getDay() === 6;
@@ -101,25 +110,27 @@ export default function PlanView(props) {
       }
       let task_name = features.find(feature => feature.id === task.feature_id).name;
       let date = new Date(task.dev_start_date);
-      for (let i = 0; i < task.be_efforts; i++) {
+      for (let i = 0; i < task.be_efforts;) {
         plan[task.dev_user_id][date.toLocaleDateString()] = plan[task.dev_user_id][date.toLocaleDateString()] == undefined ? '' : plan[task.dev_user_id][date.toLocaleDateString()];
         plan[task.dev_user_id][date.toLocaleDateString()] += task_name + ',';
         date.setDate(date.getDate() + 1);
+        isWeekend(date) ? i : i++;
       }
       date = new Date(task.fe_start_date);
-      for (let i = 0; i < task.fe_efforts; i++) {
+      for (let i = 0; i < task.fe_efforts; ) {
         plan[task.fe_user_id][date.toLocaleDateString()] = plan[task.fe_user_id][date.toLocaleDateString()] == undefined ? '' : plan[task.fe_user_id][date.toLocaleDateString()];
 
         plan[task.fe_user_id][date.toLocaleDateString()] += task_name+ ',';
         date.setDate(date.getDate() + 1);
+        isWeekend(date) ? i : i++;
       }
       let qa_date = new Date(task.qa_start_date);
-      for (let i = 0; i < task.qa_efforts; i++) {
+      for (let i = 0; i < task.qa_efforts; ) {
         plan[task.qa_user_id][qa_date.toLocaleDateString()] = plan[task.qa_user_id][qa_date.toLocaleDateString()] == undefined ? '' : plan[task.qa_user_id][qa_date.toLocaleDateString()];
-
 
         plan[task.qa_user_id][qa_date.toLocaleDateString()] += task_name+ ',';
         qa_date.setDate(qa_date.getDate() + 1);
+        isWeekend(qa_date) ? i : i++;
       }
     });
     console.log(plan)
@@ -128,7 +139,7 @@ export default function PlanView(props) {
 
   return (
     <>
-    <table>
+    <Table striped bordered hover >
       <tr>
         <th>Name</th>
         <th>Leaves</th>
@@ -141,18 +152,18 @@ export default function PlanView(props) {
           <td>{member.name}</td>
           <td><input type="text" name={member.id+'_leave_plan'} onChange={changeLeavePlan}/></td>
           {dates.map((date) => (
-            <td className="no-padding" >
+            <td className={ leavePlan[member.id] && leavePlan[member.id].split(',').includes(date.getDate().toString()) || isWeekend(date) ? 'bg-red no-padding': 'bg-green no-padding'}>
               {
-              leavePlan[member.id] && leavePlan[member.id].split(',').includes(date.getDate().toString()) || isWeekend(date) ? 
-              <div className="fill-td" >Not Available</div> :
-              <div >{sprintPlan[member.id]?.[date.toLocaleDateString()]?.slice(0,-1)}</div>
+              leavePlan[member.id] && leavePlan[member.id].split(',').includes(date.getDate().toString()) || isWeekend(date) ?
+              "Not Available" :
+              sprintPlan[member.id]?.[date.toLocaleDateString()]?.slice(0,-1)
               }
             </td>
           ))}
         </tr>
       ))}
 
-    </table>
+    </Table>
     </>
   )
 }

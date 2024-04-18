@@ -46,7 +46,11 @@ input{
   padding: 0;
 }
 
-td:has(> .fill-td) { 
+td:has(> div.fill-td) {
+  background-color: red;
+}
+
+.bg-red{
   background-color: red;
 }
 
