@@ -14,9 +14,7 @@ export default function PlanView(props) {
   useEffect(() => {
     getTeamMembers();
     getLeavePlan();
-    getDates();
-    setWorkItem();
-  }, []);
+  }, [leavePlan, dates]);
 
   async function getTeamMembers() {
     const { data } = await supabase.from("members").select().eq('team_id', props.team_id);
@@ -37,12 +35,16 @@ export default function PlanView(props) {
     data.map((leave) => {
       plan[leave.member_id] = leave.leaves;
     })
+
     setLeavePlan(plan);
+    getDates();
+    console.log("Leave plan" + JSON.stringify(leavePlan) + JSON.stringify(plan));
   }
 
 
 
   async function getDates() {
+    console.log("Leave plan" + JSON.stringify(leavePlan));
     let dates = [];
     const { data } = await supabase.from("sprints").select().eq('id', props.sprint_id);
     for (let i = 0; i < 14; i++) {
@@ -52,7 +54,8 @@ export default function PlanView(props) {
       dates.push(temp_date);
     }
     setDates(dates);
-    getSprintTasks();
+    // getSprintTasks();
+    setWorkItem();
   }
 
   async function changeLeavePlan(e) {
@@ -116,7 +119,7 @@ export default function PlanView(props) {
         plan[task.dev_user_id][date.toLocaleDateString()] = plan[task.dev_user_id][date.toLocaleDateString()] == undefined ? '' : plan[task.dev_user_id][date.toLocaleDateString()];
         plan[task.dev_user_id][date.toLocaleDateString()] += task_name + ',';
         date.setDate(date.getDate() + 1);
-        isWeekend(date) ? i : i++;
+        isWeekend(date) || (leavePlan[task.dev_user_id] && leavePlan[task.dev_user_id].split(',').includes(date.getDate().toString())) ? i : i++;
       }
       date = new Date(task.fe_start_date);
       for (let i = 0; i < task.fe_efforts; ) {
@@ -124,7 +127,7 @@ export default function PlanView(props) {
 
         plan[task.fe_user_id][date.toLocaleDateString()] += task_name+ ',';
         date.setDate(date.getDate() + 1);
-        isWeekend(date) ? i : i++;
+        isWeekend(date) || (leavePlan[task.fe_user_id] && leavePlan[task.fe_user_id].split(',').includes(date.getDate().toString()))  ? i : i++;
       }
       let qa_date = new Date(task.qa_start_date);
       for (let i = 0; i < task.qa_efforts; ) {
@@ -132,7 +135,7 @@ export default function PlanView(props) {
 
         plan[task.qa_user_id][qa_date.toLocaleDateString()] += task_name+ ',';
         qa_date.setDate(qa_date.getDate() + 1);
-        isWeekend(qa_date) ? i : i++;
+        isWeekend(qa_date) || (leavePlan[task.qa_user_id] && leavePlan[task.qa_user_id].split(',').includes(qa_date.getDate().toString()))  ? i : i++;
       }
     });
     console.log(plan)

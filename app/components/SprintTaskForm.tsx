@@ -37,7 +37,6 @@ function SprintTaskForm(props){
   }
 
   async function addFeatures(){
-    console.log("Feature added");
     Array.from(document.getElementsByClassName('sprint_task_rows')).forEach((row) => {
     const sprint_task = {
       feature_id: (row.querySelector('select[name="feature"]')as HTMLInputElement).value,
