@@ -13,20 +13,17 @@ export default function PlanView(props) {
 
   useEffect(() => {
     getTeamMembers();
-    getLeavePlan();
-  }, [leavePlan, dates]);
+    if(Object.keys(leavePlan).length === 0){
+      getLeavePlan();
+    }
+    getDates();
+    setWorkItem();
+  }, [leavePlan]);
 
   async function getTeamMembers() {
     const { data } = await supabase.from("members").select().eq('team_id', props.team_id);
     setTeamMembers(data);
     console.log(teamMembers);
-  }
-
-  async function getSprintTasks() {
-    const { data } = await supabase.from("sprint_tasks").select().eq('sprint_id', props.sprint_id);
-    setSprintTasks(data);
-    console.log(sprint_tasks);
-    setWorkItem();
   }
 
   async function getLeavePlan() {
@@ -37,7 +34,6 @@ export default function PlanView(props) {
     })
 
     setLeavePlan(plan);
-    getDates();
     console.log("Leave plan" + JSON.stringify(leavePlan) + JSON.stringify(plan));
   }
 
@@ -55,7 +51,6 @@ export default function PlanView(props) {
     }
     setDates(dates);
     // getSprintTasks();
-    setWorkItem();
   }
 
   async function changeLeavePlan(e) {
