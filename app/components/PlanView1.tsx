@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { supabase } from '../lib/initSupabase';
+import { Box, Button, Grid } from '@mui/material';
 
 export default function PlanView1(props) {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -140,9 +141,34 @@ export default function PlanView1(props) {
     console.log(plan)
     setSprintPlan(plan);
   }
+
+  function selectElementContents(el) {
+    var body = document.body, range, sel;
+    if (document.createRange && window.getSelection) {
+      range = document.createRange();
+      sel = window.getSelection();
+      sel.removeAllRanges();
+      try {
+        range.selectNodeContents(el);
+        sel.addRange(range);
+      } catch (e) {
+        range.selectNode(el);
+        sel.addRange(range);
+      }
+    } else if (body.createTextRange) {
+      range = body.createTextRange();
+      range.moveToElementText(el);
+      range.select();
+    }
+  }
+
+  function copyTable(){
+    selectElementContents(document.getElementById('plan_table'));
+  }
   return (
+    <>
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table sx={{ minWidth: 650 }} aria-label="simple table" id='plan_table'>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -176,5 +202,6 @@ export default function PlanView1(props) {
         </TableBody>
       </Table>
     </TableContainer>
+    </>
   );
 }
