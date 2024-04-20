@@ -111,20 +111,21 @@ function SprintTaskForm(props){
 
   return (
     <>
-    <link
+<br/>
+<link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
   integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
   crossOrigin="anonymous"
 />
-<br/>
+
     <div >
       <Features>
         </Features>
     </div>
     <br/>
-    <Table striped>
-            <thead>
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th>Feature</th>
               <th>Milestone</th>
@@ -187,7 +188,7 @@ function SprintTaskForm(props){
             <tr>
                 <td><Button onClick={addRow} variant='info'>Add Row</Button></td>
               </tr>
-          </Table>
+          </table>
           <div><PlanView sprint_id={props.sprint_id} team_id={props.team_id} key={stateKey}/></div>
           </>
   );

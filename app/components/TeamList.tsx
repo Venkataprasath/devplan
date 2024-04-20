@@ -22,7 +22,7 @@ function TeamList() {
     <Table striped bordered hover>
       <thead>
         <tr>
-          <th>Team Name</th>
+          <th>Team Name111</th>
         </tr>
       </thead>
       <tbody>

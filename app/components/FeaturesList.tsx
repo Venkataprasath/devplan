@@ -6,11 +6,9 @@ import { supabase } from "../lib/initSupabase";
 function FeaturesList(props) {
   console.log(props)
   const [features, setFeatures] = useState([]);
-  const [ selectedFeature, setSelectedFeature ] = useState(props.feature_id);
 
   useEffect(() => {
     getFeatures();
-    setSelectedFeature(props.feature_id)
   }, []);
 
 
@@ -20,7 +18,7 @@ function FeaturesList(props) {
   }
 
   return (
-    <select name='feature' value={selectedFeature} data-value={selectedFeature}>
+    <select name='feature' value={props.feature_id}>
       {features.map((feature) => (
         <option value={feature.id}>{feature.name}</option>
       ))}

@@ -1,72 +1,85 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import { supabase } from "../lib/initSupabase";
-import Form from 'react-bootstrap/Form';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { supabase } from '../lib/initSupabase';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
+export default function Features() {
+  const [open, setOpen] = React.useState(false);
 
-function Features() {
-  const [features, setFeatures] = useState([]);
-  const [show, setShow] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  async function addFeature() {
-    const feature_name = (document.getElementById('feature_name')  as HTMLInputElement).value;
-    const jira_id = (document.getElementById('jira_id')  as HTMLInputElement).value;
-    const lld = (document.getElementById('lld') as HTMLInputElement).checked;
-    const { data, error } = await supabase
-      .from('features')
-      .insert([
-        { name: feature_name, jira_id: jira_id }
-      ]);
-    if (error) console.log('error', error)
-    else {
-      console.log('data', data)
-      handleClose();
-    }
-  }
-
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
+    <React.Fragment>
+      <Button variant="outlined" onClick={handleClickOpen}>
         Add new feature
       </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          component: 'form',
+          onSubmit: async (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries((formData as any).entries());
+            const feature_name = formJson.feature_name;
+            handleClose();
+            const { data, error } = await supabase
+              .from('features')
+              .insert([
+                { name: feature_name, jira_id: formJson.jira_id }
+              ]);
+            if (error) console.log('error', error)
+            else {
+              console.log('data', data)
+              handleClose();
+            }
+          },
+        }}
+      >
+        <DialogTitle>Add new feature</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="feature_name"
+            name="feature_name"
+            label="Enter feature name"
+            type="text"
+            fullWidth
+            variant="standard"
+          />
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>New feature</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-        <Form>
-      <Form.Group className="mb-3" controlId="feature_name">
-        <Form.Label>Feature Name</Form.Label>
-        <Form.Control type="text" placeholder="Enter feature name" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="jira_id">
-        <Form.Label>Jira ID</Form.Label>
-        <Form.Control type="text" placeholder="Enter jira id" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="lld">
-        <Form.Check type="checkbox" label="LLD required" />
-      </Form.Group>
-    </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={addFeature}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="jira_id"
+            name="jira_id"
+            label="Enter jira id"
+            type="text"
+            fullWidth
+            variant="standard"
+          />
+          <FormControlLabel control={<Checkbox defaultChecked id="lld_required"/>} label="LLD Required"  />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit">Save</Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 }
-
-export default Features;
